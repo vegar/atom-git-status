@@ -1,0 +1,16 @@
+{
+  "name": "git-status",
+  "main": "./lib/git-status",
+  "version": "0.0.0",
+  "description": "Displays current git status",
+  "activationCommands": {
+    "atom-workspace": "git-status:toggle"
+  },
+  "repository": "https://github.com/vegar/git-status",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
