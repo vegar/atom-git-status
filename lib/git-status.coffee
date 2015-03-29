@@ -1,33 +1,31 @@
-GitStatusView = require './git-status-view'
 {CompositeDisposable} = require 'atom'
 
+GitStatusUri = 'atom://git-status'
+
+createGitStatusView = (state) ->
+  console.log 'GitStatus was toggled!'
+
+  GitStatusView = require './git-status-view'
+  new GitStatusView(state)
+
+atom.deserializers.add
+  name: 'GitStatusView'
+  deserialize: (state) -> createGitStatusView(state)
+
+
 module.exports = GitStatus =
-  gitStatusView: null
-  modalPanel: null
   subscriptions: null
 
   activate: (state) ->
-    @gitStatusView = new GitStatusView(state.gitStatusViewState)
-    @modalPanel = atom.workspace.addModalPanel(item: @gitStatusView.getElement(), visible: false)
-
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
+    @subscriptions.add atom.workspace.addOpener (filePath) ->
+      createGitStatusView(uri: GitStatusUri) if filePath is GitStatusUri
+
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'git-status:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-status:toggle', ->
+      atom.workspace.open(GitStatusUri)
 
   deactivate: ->
-    @modalPanel.destroy()
     @subscriptions.dispose()
-    @gitStatusView.destroy()
-
-  serialize: ->
-    gitStatusViewState: @gitStatusView.serialize()
-
-  toggle: ->
-    console.log 'GitStatus was toggled!'
-
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      @modalPanel.show()

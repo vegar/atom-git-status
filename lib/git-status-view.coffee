@@ -1,22 +1,15 @@
-module.exports =
-class GitStatusView
-  constructor: (serializeState) ->
-    # Create root element
-    @element = document.createElement('div')
-    @element.classList.add('git-status')
+{ScrollView} = require 'atom-space-pen-views'
 
-    # Create message element
-    message = document.createElement('div')
-    message.textContent = "The GitStatus package is Alive! It's ALIVE!"
-    message.classList.add('message')
-    @element.appendChild(message)
+module.exports = class GitStatusView extends ScrollView
 
-  # Returns an object that can be retrieved when package is activated
-  serialize: ->
+   @URI: 'atom://git-status'
 
-  # Tear down any state and detach
-  destroy: ->
-    @element.remove()
+   @content: ->
+     @div class: 'pane-item', =>
+       @h1 "Git Status"
 
-  getElement: ->
-    @element
+    getTitle: -> 'Git Status'
+  #  getUri: -> @URI
+
+    isEqual: (other) ->
+      other instanceof GitStatusView
